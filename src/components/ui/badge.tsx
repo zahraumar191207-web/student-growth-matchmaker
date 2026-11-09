@@ -14,6 +14,15 @@ const badgeVariants = cva(
         destructive:
           "border-transparent bg-destructive text-destructive-foreground shadow hover:bg-destructive/80",
         outline: "text-foreground",
+        course: "border-transparent bg-cat-course-soft text-cat-course",
+        volunteer: "border-transparent bg-cat-volunteer-soft text-cat-volunteer",
+        internship: "border-transparent bg-cat-internship-soft text-cat-internship",
+        urgent: "border-transparent bg-urgent-soft text-urgent",
+        soon: "border-transparent bg-warning-soft text-warning",
+        open: "border-transparent bg-success-soft text-success",
+        rolling: "border-transparent bg-muted text-muted-foreground",
+        tag: "border-border bg-card font-medium text-muted-foreground",
+        free: "border-transparent bg-success text-primary-foreground",
       },
     },
     defaultVariants: {

@@ -28,3 +28,11 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+## Project rules
+
+- Opportunity listings live in `src/lib/opportunities.ts` as curated static data with deadlines stored as day offsets from today, so countdowns stay fresh without a backend.
+- Match scoring is deterministic client-side code in `src/lib/matching.ts` (covered by `src/test/matching.test.ts`); the AI only writes explanations and drafts, never the ranking itself.
+- AI calls go through `src/lib/ai.server.ts` (Lovable AI Gateway SDK, Responses surface) and are exposed only via server functions in `src/lib/ai.functions.ts`; client-shared constants stay out of `.functions.ts`.
+- Student profile and saved tracker items persist in localStorage via `useSyncExternalStore` stores in `src/lib/store.ts`; no accounts exist yet.
+- Radix `SelectValue` gets explicit children so the selected label renders during SSR.
