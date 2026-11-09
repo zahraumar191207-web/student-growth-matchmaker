@@ -54,6 +54,13 @@ export const CATEGORY_META: Record<Category, { label: string; short: string }> =
   internship: { label: "Internships & Workshops", short: "Internships" },
 };
 
+export const DOC_TYPES = {
+  motivation: "Motivation letter",
+  why: '"Why do you want to join?" answer',
+  intro: "Short intro email to the organiser",
+  sop: "Personal statement paragraph",
+} as const;
+
 export interface Opportunity {
   id: string;
   title: string;

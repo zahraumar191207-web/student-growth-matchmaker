@@ -18,8 +18,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { DOC_TYPES, draftApplication } from "@/lib/ai.functions";
-import { AVAILABILITY, OPPORTUNITIES, getOpportunity } from "@/lib/opportunities";
+import { draftApplication } from "@/lib/ai.functions";
+import { AVAILABILITY, DOC_TYPES, OPPORTUNITIES, getOpportunity } from "@/lib/opportunities";
 import { profileStore, savedStore } from "@/lib/store";
 
 export const Route = createFileRoute("/assistant")({

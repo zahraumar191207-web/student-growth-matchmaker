@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
 import { askModel } from "./ai.server";
-import { AVAILABILITY, CATEGORY_META, getOpportunity } from "./opportunities";
+import { AVAILABILITY, CATEGORY_META, DOC_TYPES, getOpportunity } from "./opportunities";
 
 const profileSchema = z.object({
   name: z.string().max(80),
@@ -73,13 +73,6 @@ export const getMatchInsights = createServerFn({ method: "POST" })
       return { summary: "", picks: [], error: "Couldn't read the advisor's answer." };
     }
   });
-
-export const DOC_TYPES = {
-  motivation: "Motivation letter",
-  why: '"Why do you want to join?" answer',
-  intro: "Short intro email to the organiser",
-  sop: "Personal statement paragraph",
-} as const;
 
 export const draftApplication = createServerFn({ method: "POST" })
   .inputValidator(

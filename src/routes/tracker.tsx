@@ -8,6 +8,7 @@ import {
   Search,
   Trash2,
 } from "lucide-react";
+import type { ReactNode } from "react";
 
 import { CategoryBadge, DeadlineBadge, DeadlineDate } from "@/components/opportunity-bits";
 import { Button } from "@/components/ui/button";
@@ -177,7 +178,7 @@ function Stat({
   value,
   tone = "default",
 }: {
-  icon: React.ReactNode;
+  icon: ReactNode;
   label: string;
   value: number;
   tone?: "default" | "urgent";
