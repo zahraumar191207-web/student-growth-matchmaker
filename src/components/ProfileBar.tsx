@@ -111,7 +111,7 @@ export function ProfileBar({
             onValueChange={(v) => setDraft({ ...draft, location: v as ProfileLocation })}
           >
             <SelectTrigger id="location" className="w-full">
-              <SelectValue />
+              <SelectValue>{draft.location}</SelectValue>
             </SelectTrigger>
             <SelectContent>
               {PROFILE_LOCATIONS.map((l) => (
@@ -132,7 +132,9 @@ export function ProfileBar({
             onValueChange={(v) => setDraft({ ...draft, availability: v as AvailabilityId })}
           >
             <SelectTrigger id="availability" className="w-full">
-              <SelectValue />
+              <SelectValue>
+                {AVAILABILITY.find((a) => a.id === draft.availability)?.label}
+              </SelectValue>
             </SelectTrigger>
             <SelectContent>
               {AVAILABILITY.map((a) => (

@@ -17,6 +17,16 @@ import { CATEGORY_ICON } from "./opportunity-bits";
 const TABS: (Category | "all")[] = ["all", "course", "volunteer", "internship"];
 const LOCATIONS: (LocationTag | "all")[] = ["all", "Online", "Abu Dhabi", "Dubai", "Sharjah", "Global"];
 
+const URGENCY_LABEL: Record<UrgencyFilter, string> = {
+  any: "Any deadline",
+  week: "Closing within 7 days",
+  month: "Closing within 30 days",
+};
+const SORT_LABEL: Record<SortKey, string> = {
+  match: "Sort: Best match",
+  deadline: "Sort: Deadline soonest",
+};
+
 export function MatchFiltersBar({
   filters,
   counts,
@@ -84,7 +94,7 @@ export function MatchFiltersBar({
           onValueChange={(v) => onChange({ ...filters, location: v as LocationTag | "all" })}
         >
           <SelectTrigger className="w-full lg:w-44" aria-label="Location">
-            <SelectValue />
+            <SelectValue>{filters.location === "all" ? "All locations" : filters.location}</SelectValue>
           </SelectTrigger>
           <SelectContent>
             {LOCATIONS.map((l) => (
@@ -100,12 +110,14 @@ export function MatchFiltersBar({
           onValueChange={(v) => onChange({ ...filters, urgency: v as UrgencyFilter })}
         >
           <SelectTrigger className="w-full lg:w-48" aria-label="Deadline">
-            <SelectValue />
+            <SelectValue>{URGENCY_LABEL[filters.urgency]}</SelectValue>
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="any">Any deadline</SelectItem>
-            <SelectItem value="week">Closing within 7 days</SelectItem>
-            <SelectItem value="month">Closing within 30 days</SelectItem>
+            {(Object.keys(URGENCY_LABEL) as UrgencyFilter[]).map((k) => (
+              <SelectItem key={k} value={k}>
+                {URGENCY_LABEL[k]}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
 
@@ -114,11 +126,14 @@ export function MatchFiltersBar({
           onValueChange={(v) => onChange({ ...filters, sort: v as SortKey })}
         >
           <SelectTrigger className="w-full lg:w-44" aria-label="Sort by">
-            <SelectValue />
+            <SelectValue>{SORT_LABEL[filters.sort]}</SelectValue>
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="match">Sort: Best match</SelectItem>
-            <SelectItem value="deadline">Sort: Deadline soonest</SelectItem>
+            {(Object.keys(SORT_LABEL) as SortKey[]).map((k) => (
+              <SelectItem key={k} value={k}>
+                {SORT_LABEL[k]}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </div>
