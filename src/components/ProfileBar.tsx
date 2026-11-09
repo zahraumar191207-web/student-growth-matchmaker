@@ -86,7 +86,7 @@ export function ProfileBar({
             <GraduationCap className="size-3.5 text-muted-foreground" aria-hidden /> Major / field
           </Label>
           <Select
-            value={draft.field || undefined}
+            value={draft.field}
             onValueChange={(v) => setDraft({ ...draft, field: v as Field })}
           >
             <SelectTrigger id="field" className="w-full">

@@ -133,13 +133,16 @@ function Assistant() {
           className="space-y-5 rounded-3xl border bg-card p-5 shadow-card sm:p-6"
           onSubmit={(e) => {
             e.preventDefault();
-            if (!oppId) return toast.error("Choose an opportunity first.");
+            if (!oppId) {
+              toast.error("Choose an opportunity first.");
+              return;
+            }
             draft.mutate();
           }}
         >
           <div className="space-y-1.5">
             <Label htmlFor="opp">Opportunity</Label>
-            <Select value={oppId || undefined} onValueChange={setOppId}>
+            <Select value={oppId} onValueChange={setOppId}>
               <SelectTrigger id="opp" className="w-full">
                 <SelectValue placeholder="Choose what you're applying to" />
               </SelectTrigger>
