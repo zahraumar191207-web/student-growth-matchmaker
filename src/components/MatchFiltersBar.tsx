@@ -1,4 +1,6 @@
-import { Search } from "lucide-react";
+import { RotateCcw, Search, X } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
 
 import { Input } from "@/components/ui/input";
 import {
@@ -8,13 +10,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { MatchFilters, SortKey, UrgencyFilter } from "@/lib/matching";
+import { DEFAULT_FILTERS, type MatchFilters, type SortKey, type UrgencyFilter } from "@/lib/matching";
 import { CATEGORY_META, type Category, type LocationTag } from "@/lib/opportunities";
 import { cn } from "@/lib/utils";
 
 import { CATEGORY_ICON } from "./opportunity-bits";
 
-const TABS: (Category | "all")[] = ["all", "course", "volunteer", "internship"];
+const TABS: (Category | "all")[] = ["all", "course", "volunteer", "internship", "job"];
+
+const ACTIVE_TRIGGER = "border-primary bg-primary-soft/60 font-semibold text-primary";
+
+/** Keep search to plain words: letters, numbers, spaces and basic punctuation, max 60 chars. */
+export function sanitizeQuery(q: string) {
+  return q.replace(/[^\p{L}\p{N}\s&+.'-]/gu, "").slice(0, 60);
+}
 const LOCATIONS: (LocationTag | "all")[] = ["all", "Online", "Abu Dhabi", "Dubai", "Sharjah", "Global"];
 
 const URGENCY_LABEL: Record<UrgencyFilter, string> = {
@@ -36,6 +45,12 @@ export function MatchFiltersBar({
   counts: Record<Category | "all", number>;
   onChange: (f: MatchFilters) => void;
 }) {
+  const isFiltered =
+    filters.location !== DEFAULT_FILTERS.location ||
+    filters.urgency !== DEFAULT_FILTERS.urgency ||
+    filters.sort !== DEFAULT_FILTERS.sort ||
+    filters.query !== "";
+
   return (
     <div className="space-y-4">
       <div
@@ -74,7 +89,7 @@ export function MatchFiltersBar({
         })}
       </div>
 
-      <div className="grid gap-3 rounded-2xl border bg-card p-3 shadow-card sm:grid-cols-2 lg:grid-cols-[1fr_auto_auto_auto]">
+      <div className="grid gap-3 rounded-2xl border bg-card p-3 shadow-card sm:grid-cols-2 lg:grid-cols-[1fr_auto_auto_auto_auto]">
         <div className="relative">
           <Search
             className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
@@ -82,18 +97,32 @@ export function MatchFiltersBar({
           />
           <Input
             value={filters.query}
-            onChange={(e) => onChange({ ...filters, query: e.target.value })}
+            onChange={(e) => onChange({ ...filters, query: sanitizeQuery(e.target.value) })}
+            maxLength={60}
             placeholder="Search titles, providers, skills…"
-            className="pl-9"
+            className={cn("pl-9 pr-10", filters.query && "border-primary")}
             aria-label="Search opportunities"
           />
+          {filters.query && (
+            <button
+              type="button"
+              onClick={() => onChange({ ...filters, query: "" })}
+              className="absolute right-1 top-1/2 grid size-8 -translate-y-1/2 place-items-center rounded-full text-muted-foreground hover:bg-muted hover:text-foreground"
+              aria-label="Clear search"
+            >
+              <X className="size-4" />
+            </button>
+          )}
         </div>
 
         <Select
           value={filters.location}
           onValueChange={(v) => onChange({ ...filters, location: v as LocationTag | "all" })}
         >
-          <SelectTrigger className="w-full lg:w-44" aria-label="Location">
+          <SelectTrigger
+            className={cn("w-full lg:w-44", filters.location !== "all" && ACTIVE_TRIGGER)}
+            aria-label="Location"
+          >
             <SelectValue>{filters.location === "all" ? "All locations" : filters.location}</SelectValue>
           </SelectTrigger>
           <SelectContent>
@@ -109,7 +138,10 @@ export function MatchFiltersBar({
           value={filters.urgency}
           onValueChange={(v) => onChange({ ...filters, urgency: v as UrgencyFilter })}
         >
-          <SelectTrigger className="w-full lg:w-48" aria-label="Deadline">
+          <SelectTrigger
+            className={cn("w-full lg:w-48", filters.urgency !== "any" && ACTIVE_TRIGGER)}
+            aria-label="Deadline"
+          >
             <SelectValue>{URGENCY_LABEL[filters.urgency]}</SelectValue>
           </SelectTrigger>
           <SelectContent>
@@ -125,7 +157,10 @@ export function MatchFiltersBar({
           value={filters.sort}
           onValueChange={(v) => onChange({ ...filters, sort: v as SortKey })}
         >
-          <SelectTrigger className="w-full lg:w-44" aria-label="Sort by">
+          <SelectTrigger
+            className={cn("w-full lg:w-44", filters.sort !== "match" && ACTIVE_TRIGGER)}
+            aria-label="Sort by"
+          >
             <SelectValue>{SORT_LABEL[filters.sort]}</SelectValue>
           </SelectTrigger>
           <SelectContent>
@@ -136,6 +171,16 @@ export function MatchFiltersBar({
             ))}
           </SelectContent>
         </Select>
+
+        <Button
+          type="button"
+          variant="outline"
+          className="h-10 w-full rounded-xl px-4 sm:col-span-2 lg:col-span-1 lg:h-9 lg:w-auto"
+          disabled={!isFiltered}
+          onClick={() => onChange({ ...DEFAULT_FILTERS, category: filters.category })}
+        >
+          <RotateCcw /> Reset
+        </Button>
       </div>
     </div>
   );
