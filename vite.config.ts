@@ -19,6 +19,7 @@ export default defineConfig({
         "@tanstack/router-core",
         "@radix-ui/react-select",
         "@radix-ui/react-progress",
+        "@radix-ui/react-switch",
         "@radix-ui/react-slot",
         "@radix-ui/react-label",
         "class-variance-authority",
