@@ -1,9 +1,10 @@
-import { GraduationCap, MapPin, Sparkles, Timer, UserRound } from "lucide-react";
+import { GraduationCap, MapPin, Sparkles, Timer, UserRound, Wallet } from "lucide-react";
 import { useEffect, useState, type FormEvent } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import {
   Select,
   SelectContent,
@@ -24,6 +25,11 @@ import {
 } from "@/lib/opportunities";
 
 const MAX_INTERESTS = 5;
+
+/** Names: letters (any script), spaces, hyphens and apostrophes only, max 40 chars. */
+export function sanitizeName(v: string) {
+  return v.replace(/[^\p{L}\s'-]/gu, "").replace(/\s{2,}/g, " ").slice(0, 40);
+}
 
 export function ProfileBar({
   profile,
@@ -48,7 +54,7 @@ export function ProfileBar({
 
   const submit = (e: FormEvent) => {
     e.preventDefault();
-    onSubmit(draft);
+    onSubmit({ ...draft, name: draft.name.trim() });
   };
 
   return (
@@ -75,9 +81,9 @@ export function ProfileBar({
           <Input
             id="name"
             value={draft.name}
-            maxLength={60}
+            maxLength={40}
             placeholder="e.g. Mariam"
-            onChange={(e) => setDraft({ ...draft, name: e.target.value })}
+            onChange={(e) => setDraft({ ...draft, name: sanitizeName(e.target.value) })}
           />
         </div>
 
@@ -145,6 +151,26 @@ export function ProfileBar({
             </SelectContent>
           </Select>
         </div>
+      </div>
+
+      <div className="mt-5 flex items-start gap-3 rounded-2xl border border-cat-job/20 bg-cat-job-soft/60 p-4">
+        <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-cat-job text-primary-foreground">
+          <Wallet className="size-4" aria-hidden />
+        </span>
+        <div className="flex-1">
+          <Label htmlFor="parttime" className="text-sm font-semibold">
+            No degree yet? Show me part-time jobs
+          </Label>
+          <p className="mt-0.5 text-xs text-muted-foreground">
+            Paid roles that don't need a degree — traffic marshal, event usher, tutor, retail and more.
+          </p>
+        </div>
+        <Switch
+          id="parttime"
+          checked={draft.seekingPartTime}
+          onCheckedChange={(v) => setDraft({ ...draft, seekingPartTime: v })}
+          className="mt-1"
+        />
       </div>
 
       <fieldset className="mt-5">
