@@ -1,13 +1,14 @@
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { BadgeCheck, Globe2, Sparkles } from "lucide-react";
+import { BadgeCheck, ChevronDown, Globe2, Sparkles, Wallet } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
 
 import { AgentPanel } from "@/components/AgentPanel";
 import { MatchFiltersBar } from "@/components/MatchFiltersBar";
 import { OpportunityCard, OpportunityCardSkeleton } from "@/components/OpportunityCard";
 import { ProfileBar } from "@/components/ProfileBar";
+import { Button } from "@/components/ui/button";
 import heroImg from "@/assets/hero-students.jpg";
 import { getMatchInsights } from "@/lib/ai.functions";
 import {
@@ -41,12 +42,19 @@ export const Route = createFileRoute("/")({
   component: Discover,
 });
 
+const PAGE_SIZE = 6;
+
 type Insights = { summary: string; picks: { id: string; reason: string }[]; error: string | null };
 
 function Discover() {
   const stored = profileStore.useValue();
   const [filters, setFilters] = useState<MatchFilters>(DEFAULT_FILTERS);
   const [thinking, setThinking] = useState(false);
+  const [visible, setVisible] = useState(PAGE_SIZE);
+  const changeFilters = (f: MatchFilters) => {
+    setFilters(f);
+    setVisible(PAGE_SIZE);
+  };
   const resultsRef = useRef<HTMLDivElement>(null);
   const insightsFn = useServerFn(getMatchInsights);
 
@@ -66,8 +74,21 @@ function Discover() {
       course: base.filter((r) => r.opportunity.category === "course").length,
       volunteer: base.filter((r) => r.opportunity.category === "volunteer").length,
       internship: base.filter((r) => r.opportunity.category === "internship").length,
+      job: base.filter((r) => r.opportunity.category === "job").length,
     };
   }, [profile, filters]);
+
+  // Smart fallback: never leave a blank screen — show the closest UAE-wide & online picks.
+  const fallback = useMemo(
+    () =>
+      results.length > 0
+        ? []
+        : filterAndRank(OPPORTUNITIES, profile, {
+            ...DEFAULT_FILTERS,
+            category: filters.category,
+          }).slice(0, 3),
+    [results.length, profile, filters.category],
+  );
 
   const aiReasons = useMemo(() => {
     const m = new Map<string, string>();
@@ -78,6 +99,7 @@ function Discover() {
   const runMatch = (p: StudentProfile) => {
     profileStore.set({ ...p, hasMatched: true });
     setFilters(DEFAULT_FILTERS);
+    setVisible(PAGE_SIZE);
     setThinking(true);
     window.setTimeout(() => setThinking(false), 1200);
     const top = filterAndRank(OPPORTUNITIES, p, DEFAULT_FILTERS)
@@ -120,6 +142,10 @@ function Discover() {
                 curated listings
               </li>
               <li className="flex items-center gap-1.5">
+                <Wallet className="size-4 text-cat-job" aria-hidden /> Part-time jobs, no degree
+                needed
+              </li>
+              <li className="flex items-center gap-1.5">
                 <Globe2 className="size-4 text-primary" aria-hidden /> Abu Dhabi · Dubai · Sharjah ·
                 Online
               </li>
@@ -143,12 +169,12 @@ function Discover() {
           total={OPPORTUNITIES.length}
         />
 
-        <MatchFiltersBar filters={filters} counts={counts} onChange={setFilters} />
+        <MatchFiltersBar filters={filters} counts={counts} onChange={changeFilters} />
 
         <div className="mt-6 grid gap-5 md:grid-cols-2 xl:grid-cols-3" aria-live="polite">
           {thinking
             ? Array.from({ length: 6 }, (_, i) => <OpportunityCardSkeleton key={i} />)
-            : results.map((r, i) => (
+            : results.slice(0, visible).map((r, i) => (
                 <OpportunityCard
                   key={r.opportunity.id}
                   match={r}
@@ -158,12 +184,47 @@ function Discover() {
               ))}
         </div>
 
-        {!thinking && results.length === 0 && (
-          <div className="mt-6 rounded-2xl border border-dashed bg-card p-10 text-center">
-            <p className="font-display text-lg font-semibold">No matches with these filters</p>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Try a different location or widen the deadline window.
+        {!thinking && results.length > visible && (
+          <div className="mt-8 flex flex-col items-center gap-2">
+            <p className="text-sm text-muted-foreground">
+              Showing {visible} of {results.length} matches
             </p>
+            <Button
+              variant="outline"
+              size="lg"
+              className="rounded-full"
+              onClick={() => setVisible((v) => v + PAGE_SIZE)}
+            >
+              <ChevronDown /> Show more matches
+            </Button>
+          </div>
+        )}
+
+        {!thinking && results.length === 0 && (
+          <div className="mt-6 space-y-5">
+            <div className="rounded-2xl border border-dashed bg-card p-8 text-center">
+              <p className="font-display text-lg font-semibold">No exact matches with these filters</p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Here are the closest options across the UAE and online instead.
+              </p>
+              <Button
+                variant="soft"
+                className="mt-4 rounded-full"
+                onClick={() => changeFilters({ ...DEFAULT_FILTERS, category: filters.category })}
+              >
+                Broaden my search
+              </Button>
+            </div>
+            <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+              {fallback.map((r, i) => (
+                <OpportunityCard
+                  key={r.opportunity.id}
+                  match={r}
+                  index={i}
+                  aiReason={aiReasons.get(r.opportunity.id)}
+                />
+              ))}
+            </div>
           </div>
         )}
       </section>
