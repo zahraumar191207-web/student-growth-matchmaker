@@ -229,7 +229,11 @@ function TrackerItem({ row }: { row: Row }) {
         </Select>
         <div className="ml-auto flex items-center">
           <Button variant="ghost" size="icon" className="size-8" asChild>
-            <Link to="/assistant" search={{ id: o.id }} aria-label={`Draft application for ${o.title}`}>
+            <Link
+              to="/assistant"
+              search={{ id: o.id }}
+              aria-label={`Draft application for ${o.title}`}
+            >
               <PenLine />
             </Link>
           </Button>

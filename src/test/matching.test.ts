@@ -33,6 +33,7 @@ const student: StudentProfile = {
   location: "Dubai",
   interests: ["Marketing", "Finance", "Design"],
   availability: "part",
+  seekingPartTime: false,
 };
 
 describe("match score", () => {
@@ -100,5 +101,24 @@ describe("deadline urgency", () => {
       (r) => r.opportunity.id,
     );
     expect(ids).toEqual(["soon", "late", "rolling"]);
+  });
+});
+
+describe("part-time jobs for students without a degree", () => {
+  const job: Opportunity = {
+    ...base,
+    category: "job",
+    fields: ["Any"],
+    interests: [],
+    locations: ["Sharjah"],
+    hoursPerWeek: 99,
+  };
+
+  it("gives a part-time job the full 35 field points when the student wants part-time work", () => {
+    expect(scoreOpportunity(job, { ...student, seekingPartTime: true }).score).toBe(35);
+  });
+
+  it("scores the same job as an open-to-any-major listing (20) when the toggle is off", () => {
+    expect(scoreOpportunity(job, student).score).toBe(20);
   });
 });

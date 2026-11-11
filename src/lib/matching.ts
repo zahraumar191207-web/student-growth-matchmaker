@@ -15,6 +15,8 @@ export interface StudentProfile {
   location: ProfileLocation;
   interests: Interest[];
   availability: AvailabilityId;
+  /** No degree yet and looking for paid part-time work. */
+  seekingPartTime: boolean;
 }
 
 export const EMPTY_PROFILE: StudentProfile = {
@@ -23,6 +25,7 @@ export const EMPTY_PROFILE: StudentProfile = {
   location: "Abu Dhabi",
   interests: [],
   availability: "part",
+  seekingPartTime: false,
 };
 
 export interface MatchResult {
@@ -34,6 +37,7 @@ export interface MatchResult {
 /**
  * Match score out of 100:
  * - Field of study: 35 for a direct match, 20 if open to any major.
+ *   Part-time jobs count as a 35-point match for students seeking part-time work without a degree.
  * - Interests: 12 per shared interest, capped at 30.
  * - Location: 20 for your city, 15 for Online, 10 for Global (Online-only students: Online/Global = 20, in-person = 0).
  * - Availability: 15 if it fits your weekly hours, 5 if within 1.5x, else 0.
@@ -42,7 +46,10 @@ export function scoreOpportunity(o: Opportunity, p: StudentProfile): MatchResult
   let score = 0;
   const reasons: string[] = [];
 
-  if (p.field && o.fields.includes(p.field)) {
+  if (o.category === "job" && p.seekingPartTime) {
+    score += 35;
+    reasons.push("No degree needed — fits your part-time work goal");
+  } else if (p.field && o.fields.includes(p.field)) {
     score += 35;
     reasons.push(`Built for ${p.field} students`);
   } else if (o.fields.includes("Any")) {

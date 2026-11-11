@@ -82,3 +82,19 @@ export function setSavedStatus(id: string, status: SavedStatus) {
 export function useIsSaved(id: string) {
   return savedStore.useValue().items.some((i) => i.id === id);
 }
+
+/** Anonymous 👍/👎 ratings on recommendations, kept on this device only. */
+export type Vote = 1 | -1;
+export const feedbackStore = createPersistentStore<{ votes: Record<string, Vote> }>(
+  "om.feedback.v1",
+  { votes: {} },
+);
+
+export function setVote(id: string, vote: Vote) {
+  feedbackStore.set((s) => {
+    const votes = { ...s.votes };
+    if (votes[id] === vote) delete votes[id];
+    else votes[id] = vote;
+    return { votes };
+  });
+}

@@ -10,6 +10,27 @@
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
 export default defineConfig({
+  // Pre-bundle every client library up front. When Vite discovers one late it re-optimizes
+  // mid-session, and an open tab can end up with two React copies (null hook dispatcher crash).
+  vite: {
+    optimizeDeps: {
+      include: [
+        "@tanstack/react-query",
+        "@tanstack/router-core",
+        "@radix-ui/react-select",
+        "@radix-ui/react-progress",
+        "@radix-ui/react-switch",
+        "@radix-ui/react-slot",
+        "@radix-ui/react-label",
+        "class-variance-authority",
+        "clsx",
+        "tailwind-merge",
+        "lucide-react",
+        "sonner",
+        "zod",
+      ],
+    },
+  },
   tanstackStart: {
     // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
     // nitro/vite builds from this

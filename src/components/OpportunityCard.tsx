@@ -1,15 +1,19 @@
 import { Link } from "@tanstack/react-router";
 import {
   Award,
+  Banknote,
   Bookmark,
   BookmarkCheck,
   CalendarClock,
   Clock,
   ExternalLink,
+  Link2,
   MapPin,
   PenLine,
   ShieldCheck,
   Sparkles,
+  ThumbsDown,
+  ThumbsUp,
   Users,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -17,9 +21,17 @@ import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { MatchResult } from "@/lib/matching";
-import { toggleSaved, useIsSaved } from "@/lib/store";
+import { feedbackStore, setVote, toggleSaved, useIsSaved, type Vote } from "@/lib/store";
+import { cn } from "@/lib/utils";
 
-import { CategoryBadge, DeadlineBadge, DeadlineDate, MatchRing } from "./opportunity-bits";
+import {
+  CategoryBadge,
+  DeadlineBadge,
+  DeadlineDate,
+  LocationBadge,
+  MatchRing,
+  sourceHost,
+} from "./opportunity-bits";
 
 export function OpportunityCard({
   match,
@@ -32,6 +44,7 @@ export function OpportunityCard({
 }) {
   const o = match.opportunity;
   const saved = useIsSaved(o.id);
+  const isJob = o.category === "job";
 
   return (
     <article
@@ -42,8 +55,8 @@ export function OpportunityCard({
         <div className="min-w-0 flex-1">
           <div className="mb-2 flex flex-wrap items-center gap-1.5">
             <CategoryBadge category={o.category} />
-            <Badge variant="free" className="rounded-full">
-              Free
+            <Badge variant={isJob ? "paid" : "free"} className="rounded-full">
+              {isJob ? "Paid · free to apply" : "Free"}
             </Badge>
             {o.verified && (
               <span className="inline-flex items-center gap-1 text-xs font-medium text-success">
@@ -74,9 +87,7 @@ export function OpportunityCard({
           <dt className="sr-only">Location</dt>
           <dd className="flex flex-wrap gap-1">
             {o.locations.map((l) => (
-              <Badge key={l} variant="tag" className="rounded-full px-2 py-0">
-                {l}
-              </Badge>
+              <LocationBadge key={l} location={l} />
             ))}
           </dd>
         </div>
@@ -93,13 +104,32 @@ export function OpportunityCard({
           <dd>{o.eligibility}</dd>
         </div>
         <div className="flex items-start gap-2">
-          <Award className="mt-0.5 size-4 shrink-0 text-muted-foreground" aria-hidden />
-          <dt className="sr-only">Credential</dt>
-          <dd>{o.credential}</dd>
+          {o.pay ? (
+            <Banknote className="mt-0.5 size-4 shrink-0 text-muted-foreground" aria-hidden />
+          ) : (
+            <Award className="mt-0.5 size-4 shrink-0 text-muted-foreground" aria-hidden />
+          )}
+          <dt className="sr-only">{o.pay ? "Pay" : "Credential"}</dt>
+          <dd>{o.pay ? `${o.pay} (indicative)` : o.credential}</dd>
         </div>
       </dl>
 
-      <div className="mt-auto pt-5">
+      <p className="mt-3 flex items-center gap-1.5 text-xs text-muted-foreground">
+        <Link2 className="size-3.5" aria-hidden />
+        Source:{" "}
+        <a
+          href={o.url}
+          target="_blank"
+          rel="noreferrer"
+          className="font-medium text-primary underline-offset-2 hover:underline"
+        >
+          {sourceHost(o.url)}
+        </a>
+        <span aria-hidden>·</span>
+        {o.locations.join(" / ")}
+      </p>
+
+      <div className="mt-auto pt-4">
         <div className="flex flex-wrap items-center justify-between gap-2 border-t pt-4">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <CalendarClock className="size-4" aria-hidden />
@@ -133,8 +163,53 @@ export function OpportunityCard({
             </Button>
           </div>
         </div>
+        <FeedbackRow id={o.id} title={o.title} />
       </div>
     </article>
+  );
+}
+
+function FeedbackRow({ id, title }: { id: string; title: string }) {
+  const vote = feedbackStore.useValue().votes[id];
+  const cast = (v: Vote) => {
+    setVote(id, v);
+    if (vote !== v) toast("Thanks — your rating helps improve matches");
+  };
+  return (
+    <div className="mt-3 flex items-center justify-between gap-2 rounded-xl bg-muted/60 px-3 py-1.5">
+      <span className="text-xs text-muted-foreground">
+        {vote === 1
+          ? "You found this helpful"
+          : vote === -1
+            ? "Marked as not a fit"
+            : "Good match?"}
+      </span>
+      <div className="flex items-center gap-1">
+        <Button
+          variant="ghost"
+          size="icon"
+          className={cn(
+            "size-9",
+            vote === 1 && "bg-success-soft text-success hover:bg-success-soft",
+          )}
+          aria-pressed={vote === 1}
+          aria-label={`Good match: ${title}`}
+          onClick={() => cast(1)}
+        >
+          <ThumbsUp />
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          className={cn("size-9", vote === -1 && "bg-urgent-soft text-urgent hover:bg-urgent-soft")}
+          aria-pressed={vote === -1}
+          aria-label={`Not a good match: ${title}`}
+          onClick={() => cast(-1)}
+        >
+          <ThumbsDown />
+        </Button>
+      </div>
+    </div>
   );
 }
 

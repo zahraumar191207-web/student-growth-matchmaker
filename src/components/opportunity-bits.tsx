@@ -1,15 +1,43 @@
-import { BookOpen, Briefcase, HeartHandshake, type LucideIcon } from "lucide-react";
+import { BookOpen, Briefcase, Globe2, HeartHandshake, Wallet, type LucideIcon } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { deadlineDate, urgencyOf } from "@/lib/matching";
-import { CATEGORY_META, type Category } from "@/lib/opportunities";
+import { CATEGORY_META, type Category, type LocationTag } from "@/lib/opportunities";
 import { cn } from "@/lib/utils";
 
 export const CATEGORY_ICON: Record<Category, LucideIcon> = {
   course: BookOpen,
   volunteer: HeartHandshake,
   internship: Briefcase,
+  job: Wallet,
 };
+
+const LOCATION_VARIANT = {
+  "Abu Dhabi": "loc-abudhabi",
+  Dubai: "loc-dubai",
+  Sharjah: "loc-sharjah",
+  Online: "loc-online",
+  Global: "rolling",
+} as const satisfies Record<LocationTag, string>;
+
+export function LocationBadge({ location }: { location: LocationTag }) {
+  return (
+    <Badge variant={LOCATION_VARIANT[location]} className="gap-1 rounded-full px-2 py-0">
+      {location === "Online" || location === "Global" ? (
+        <Globe2 className="size-3" aria-hidden />
+      ) : null}
+      {location}
+    </Badge>
+  );
+}
+
+export function sourceHost(url: string) {
+  try {
+    return new URL(url).hostname.replace(/^www\./, "");
+  } catch {
+    return url;
+  }
+}
 
 export function CategoryBadge({ category }: { category: Category }) {
   const Icon = CATEGORY_ICON[category];
@@ -70,7 +98,13 @@ export function MatchRing({ score, size = 52 }: { score: number; size?: number }
       aria-label={`${score}% match`}
     >
       <svg width={size} height={size} className="-rotate-90">
-        <circle cx={size / 2} cy={size / 2} r={r} className="fill-none stroke-muted" strokeWidth={5} />
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={r}
+          className="fill-none stroke-muted"
+          strokeWidth={5}
+        />
         <circle
           cx={size / 2}
           cy={size / 2}

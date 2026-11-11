@@ -36,3 +36,5 @@ use the editor.
 - AI calls go through `src/lib/ai.server.ts` (Lovable AI Gateway SDK, Responses surface) and are exposed only via server functions in `src/lib/ai.functions.ts`; client-shared constants stay out of `.functions.ts`.
 - Student profile and saved tracker items persist in localStorage via `useSyncExternalStore` stores in `src/lib/store.ts`; no accounts exist yet.
 - Radix `SelectValue` gets explicit children so the selected label renders during SSR.
+- Client libraries are pre-bundled via `vite.optimizeDeps.include` in `vite.config.ts`; late dependency discovery re-optimizes mid-session and loads two React copies (null hook dispatcher crash). Add new client packages there.
+- Thumbs up/down feedback is stored only on-device (`feedbackStore`); AI logs record label, latency and sizes only, never prompts, outputs or names.
