@@ -99,6 +99,7 @@ function Assistant() {
             location: profile.location,
             interests: profile.interests,
             availability: profile.availability,
+            seekingPartTime: profile.seekingPartTime,
           },
           opportunityId: oppId,
           docType,
