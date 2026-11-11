@@ -206,9 +206,7 @@ function Assistant() {
                 <button
                   key={p}
                   type="button"
-                  onClick={() =>
-                    setHighlights((h) => (h ? `${h.trimEnd()}\n${p}: ` : `${p}: `))
-                  }
+                  onClick={() => setHighlights((h) => (h ? `${h.trimEnd()}\n${p}: ` : `${p}: `))}
                   className="inline-flex items-center gap-1 rounded-full bg-accent px-2.5 py-1 text-xs font-medium text-accent-foreground transition-colors hover:bg-saffron/40"
                 >
                   <Lightbulb className="size-3" aria-hidden /> {p}
@@ -226,7 +224,10 @@ function Assistant() {
               {hours ? ` · ${hours}` : ""}
               {profile.interests.length > 0 ? ` · ${profile.interests.join(", ")}` : ""}
             </p>
-            <Link to="/" className="mt-1 inline-block text-xs font-semibold text-primary hover:underline">
+            <Link
+              to="/"
+              className="mt-1 inline-block text-xs font-semibold text-primary hover:underline"
+            >
               Edit profile
             </Link>
           </div>
@@ -238,7 +239,8 @@ function Assistant() {
             className="w-full rounded-full"
             disabled={draft.isPending}
           >
-            <Sparkles /> {draft.isPending ? "Drafting…" : output ? "Write a new draft" : "Draft it for me"}
+            <Sparkles />{" "}
+            {draft.isPending ? "Drafting…" : output ? "Write a new draft" : "Draft it for me"}
           </Button>
         </form>
 
@@ -249,7 +251,9 @@ function Assistant() {
           <div className="flex items-center justify-between gap-2 border-b px-5 py-3">
             <p className="flex items-center gap-2 text-sm font-semibold">
               <PenLine className="size-4 text-primary" aria-hidden /> Your draft
-              {words > 0 && <span className="font-normal text-muted-foreground">· {words} words</span>}
+              {words > 0 && (
+                <span className="font-normal text-muted-foreground">· {words} words</span>
+              )}
             </p>
             <div className="flex items-center gap-1">
               <Button

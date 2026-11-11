@@ -178,13 +178,20 @@ function FeedbackRow({ id, title }: { id: string; title: string }) {
   return (
     <div className="mt-3 flex items-center justify-between gap-2 rounded-xl bg-muted/60 px-3 py-1.5">
       <span className="text-xs text-muted-foreground">
-        {vote === 1 ? "You found this helpful" : vote === -1 ? "Marked as not a fit" : "Good match?"}
+        {vote === 1
+          ? "You found this helpful"
+          : vote === -1
+            ? "Marked as not a fit"
+            : "Good match?"}
       </span>
       <div className="flex items-center gap-1">
         <Button
           variant="ghost"
           size="icon"
-          className={cn("size-9", vote === 1 && "bg-success-soft text-success hover:bg-success-soft")}
+          className={cn(
+            "size-9",
+            vote === 1 && "bg-success-soft text-success hover:bg-success-soft",
+          )}
           aria-pressed={vote === 1}
           aria-label={`Good match: ${title}`}
           onClick={() => cast(1)}

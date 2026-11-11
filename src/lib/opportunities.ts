@@ -443,8 +443,7 @@ export const OPPORTUNITIES: Opportunity[] = [
     eligibility: "UAE residents 18+",
     deadlineInDays: 33,
     credential: "Volunteer hours certificate",
-    summary:
-      "Support family wellbeing programmes and community centres across Sharjah.",
+    summary: "Support family wellbeing programmes and community centres across Sharjah.",
     url: "https://www.sssd.shj.ae/",
     verified: true,
   },
@@ -796,7 +795,8 @@ export const OPPORTUNITIES: Opportunity[] = [
     deadlineInDays: 25,
     credential: "Paid sessions + reference",
     pay: "Typically AED 100–200 / session",
-    summary: "Supervise exam halls during busy exam seasons — calm, structured and well paid per session.",
+    summary:
+      "Supervise exam halls during busy exam seasons — calm, structured and well paid per session.",
     url: "https://www.bayt.com/",
     verified: true,
   },

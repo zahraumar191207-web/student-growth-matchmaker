@@ -16,21 +16,125 @@ const p = (o: Partial<StudentProfile>): StudentProfile => ({
 });
 
 const SCENARIOS: { name: string; profile: StudentProfile; expectInTop3: string }[] = [
-  { name: "CS · Abu Dhabi · AI research, full-time", profile: p({ field: "Computer Science", interests: ["AI", "Research"], availability: "full" }), expectInTop3: "mbzuai-ugrip" },
-  { name: "Business · Dubai · marketing", profile: p({ field: "Business", location: "Dubai", interests: ["Marketing", "Entrepreneurship"] }), expectInTop3: "google-digital-marketing" },
-  { name: "Health · Abu Dhabi", profile: p({ field: "Health Sciences", interests: ["Healthcare", "Research"] }), expectInTop3: "health-shadowing" },
-  { name: "Environmental · Sharjah", profile: p({ field: "Environmental Science", location: "Sharjah", interests: ["Sustainability"], availability: "half" }), expectInTop3: "uncc-climate" },
-  { name: "Education · Dubai · light hours", profile: p({ field: "Education", location: "Dubai", interests: ["Teaching", "Community"], availability: "light" }), expectInTop3: "dubai-cares" },
-  { name: "Design · online only", profile: p({ field: "Arts & Design", location: "Online only", interests: ["Design", "Marketing"], availability: "light" }), expectInTop3: "canva-design" },
-  { name: "Law · Abu Dhabi · community", profile: p({ field: "Law & Social Sciences", interests: ["Community", "Leadership"] }), expectInTop3: "maan-ad" },
-  { name: "Engineering · Sharjah · sustainability", profile: p({ field: "Engineering", location: "Sharjah", interests: ["Sustainability", "Research"], availability: "full" }), expectInTop3: "srtip-innovation" },
-  { name: "Media · Dubai", profile: p({ field: "Media & Communication", location: "Dubai", interests: ["Marketing", "Design"] }), expectInTop3: "in5-design" },
-  { name: "CS · online only · cybersecurity", profile: p({ field: "Computer Science", location: "Online only", interests: ["Cybersecurity", "Coding"], availability: "light" }), expectInTop3: "ibm-cyber" },
-  { name: "No major, no interests · Abu Dhabi (fallback)", profile: p({}), expectInTop3: "erc-youth" },
-  { name: "Business · Abu Dhabi · finance", profile: p({ field: "Business", interests: ["Finance", "Entrepreneurship"] }), expectInTop3: "adgm-fintech" },
-  { name: "No degree · Abu Dhabi · events, part-time", profile: p({ interests: ["Events"], availability: "half", seekingPartTime: true }), expectInTop3: "traffic-marshal-yas" },
-  { name: "No degree · Dubai · events, part-time", profile: p({ field: "Business", location: "Dubai", interests: ["Events", "Community"], availability: "half", seekingPartTime: true }), expectInTop3: "parking-marshal-dubai" },
-  { name: "No degree · online · tutoring, part-time", profile: p({ field: "Education", location: "Online only", interests: ["Teaching"], seekingPartTime: true }), expectInTop3: "peer-tutor-online" },
+  {
+    name: "CS · Abu Dhabi · AI research, full-time",
+    profile: p({ field: "Computer Science", interests: ["AI", "Research"], availability: "full" }),
+    expectInTop3: "mbzuai-ugrip",
+  },
+  {
+    name: "Business · Dubai · marketing",
+    profile: p({
+      field: "Business",
+      location: "Dubai",
+      interests: ["Marketing", "Entrepreneurship"],
+    }),
+    expectInTop3: "google-digital-marketing",
+  },
+  {
+    name: "Health · Abu Dhabi",
+    profile: p({ field: "Health Sciences", interests: ["Healthcare", "Research"] }),
+    expectInTop3: "health-shadowing",
+  },
+  {
+    name: "Environmental · Sharjah",
+    profile: p({
+      field: "Environmental Science",
+      location: "Sharjah",
+      interests: ["Sustainability"],
+      availability: "half",
+    }),
+    expectInTop3: "uncc-climate",
+  },
+  {
+    name: "Education · Dubai · light hours",
+    profile: p({
+      field: "Education",
+      location: "Dubai",
+      interests: ["Teaching", "Community"],
+      availability: "light",
+    }),
+    expectInTop3: "dubai-cares",
+  },
+  {
+    name: "Design · online only",
+    profile: p({
+      field: "Arts & Design",
+      location: "Online only",
+      interests: ["Design", "Marketing"],
+      availability: "light",
+    }),
+    expectInTop3: "canva-design",
+  },
+  {
+    name: "Law · Abu Dhabi · community",
+    profile: p({ field: "Law & Social Sciences", interests: ["Community", "Leadership"] }),
+    expectInTop3: "maan-ad",
+  },
+  {
+    name: "Engineering · Sharjah · sustainability",
+    profile: p({
+      field: "Engineering",
+      location: "Sharjah",
+      interests: ["Sustainability", "Research"],
+      availability: "full",
+    }),
+    expectInTop3: "srtip-innovation",
+  },
+  {
+    name: "Media · Dubai",
+    profile: p({
+      field: "Media & Communication",
+      location: "Dubai",
+      interests: ["Marketing", "Design"],
+    }),
+    expectInTop3: "in5-design",
+  },
+  {
+    name: "CS · online only · cybersecurity",
+    profile: p({
+      field: "Computer Science",
+      location: "Online only",
+      interests: ["Cybersecurity", "Coding"],
+      availability: "light",
+    }),
+    expectInTop3: "ibm-cyber",
+  },
+  {
+    name: "No major, no interests · Abu Dhabi (fallback)",
+    profile: p({}),
+    expectInTop3: "erc-youth",
+  },
+  {
+    name: "Business · Abu Dhabi · finance",
+    profile: p({ field: "Business", interests: ["Finance", "Entrepreneurship"] }),
+    expectInTop3: "adgm-fintech",
+  },
+  {
+    name: "No degree · Abu Dhabi · events, part-time",
+    profile: p({ interests: ["Events"], availability: "half", seekingPartTime: true }),
+    expectInTop3: "traffic-marshal-yas",
+  },
+  {
+    name: "No degree · Dubai · events, part-time",
+    profile: p({
+      field: "Business",
+      location: "Dubai",
+      interests: ["Events", "Community"],
+      availability: "half",
+      seekingPartTime: true,
+    }),
+    expectInTop3: "parking-marshal-dubai",
+  },
+  {
+    name: "No degree · online · tutoring, part-time",
+    profile: p({
+      field: "Education",
+      location: "Online only",
+      interests: ["Teaching"],
+      seekingPartTime: true,
+    }),
+    expectInTop3: "peer-tutor-online",
+  },
 ];
 
 describe("matchmaker evaluation set", () => {

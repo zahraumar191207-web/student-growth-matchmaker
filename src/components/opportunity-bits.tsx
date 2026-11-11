@@ -98,7 +98,13 @@ export function MatchRing({ score, size = 52 }: { score: number; size?: number }
       aria-label={`${score}% match`}
     >
       <svg width={size} height={size} className="-rotate-90">
-        <circle cx={size / 2} cy={size / 2} r={r} className="fill-none stroke-muted" strokeWidth={5} />
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={r}
+          className="fill-none stroke-muted"
+          strokeWidth={5}
+        />
         <circle
           cx={size / 2}
           cy={size / 2}

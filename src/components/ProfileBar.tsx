@@ -28,7 +28,10 @@ const MAX_INTERESTS = 5;
 
 /** Names: letters (any script), spaces, hyphens and apostrophes only, max 40 chars. */
 export function sanitizeName(v: string) {
-  return v.replace(/[^\p{L}\s'-]/gu, "").replace(/\s{2,}/g, " ").slice(0, 40);
+  return v
+    .replace(/[^\p{L}\s'-]/gu, "")
+    .replace(/\s{2,}/g, " ")
+    .slice(0, 40);
 }
 
 export function ProfileBar({
@@ -162,7 +165,8 @@ export function ProfileBar({
             No degree yet? Show me part-time jobs
           </Label>
           <p className="mt-0.5 text-xs text-muted-foreground">
-            Paid roles that don't need a degree — traffic marshal, event usher, tutor, retail and more.
+            Paid roles that don't need a degree — traffic marshal, event usher, tutor, retail and
+            more.
           </p>
         </div>
         <Switch

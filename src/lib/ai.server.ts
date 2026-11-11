@@ -26,7 +26,13 @@ export async function askModel(opts: {
   const started = Date.now();
   const log = (ok: boolean, chars = 0) =>
     console.info(
-      JSON.stringify({ ai: opts.label, ok, ms: Date.now() - started, inChars: opts.input.length, outChars: chars }),
+      JSON.stringify({
+        ai: opts.label,
+        ok,
+        ms: Date.now() - started,
+        inChars: opts.input.length,
+        outChars: chars,
+      }),
     );
   try {
     const res = await generateResponse({

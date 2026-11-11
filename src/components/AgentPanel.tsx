@@ -69,7 +69,11 @@ export function AgentPanel({
                     key={s}
                     className={cn(
                       "flex items-center gap-2 transition-colors",
-                      done ? "text-foreground" : running ? "text-primary" : "text-muted-foreground/60",
+                      done
+                        ? "text-foreground"
+                        : running
+                          ? "text-primary"
+                          : "text-muted-foreground/60",
                     )}
                   >
                     {done ? (

@@ -63,10 +63,7 @@ function Discover() {
   });
 
   const profile: StudentProfile = stored;
-  const results = useMemo(
-    () => filterAndRank(OPPORTUNITIES, profile, filters),
-    [profile, filters],
-  );
+  const results = useMemo(() => filterAndRank(OPPORTUNITIES, profile, filters), [profile, filters]);
   const counts = useMemo(() => {
     const base = filterAndRank(OPPORTUNITIES, profile, { ...filters, category: "all" });
     return {
@@ -164,7 +161,9 @@ function Discover() {
           thinking={thinking}
           loadingInsights={insights.isPending}
           summary={insights.data?.summary}
-          error={insights.data?.error ?? (insights.isError ? "The advisor couldn't respond." : null)}
+          error={
+            insights.data?.error ?? (insights.isError ? "The advisor couldn't respond." : null)
+          }
           name={profile.name}
           total={OPPORTUNITIES.length}
         />
@@ -174,14 +173,16 @@ function Discover() {
         <div className="mt-6 grid gap-5 md:grid-cols-2 xl:grid-cols-3" aria-live="polite">
           {thinking
             ? Array.from({ length: 6 }, (_, i) => <OpportunityCardSkeleton key={i} />)
-            : results.slice(0, visible).map((r, i) => (
-                <OpportunityCard
-                  key={r.opportunity.id}
-                  match={r}
-                  index={i}
-                  aiReason={aiReasons.get(r.opportunity.id)}
-                />
-              ))}
+            : results
+                .slice(0, visible)
+                .map((r, i) => (
+                  <OpportunityCard
+                    key={r.opportunity.id}
+                    match={r}
+                    index={i}
+                    aiReason={aiReasons.get(r.opportunity.id)}
+                  />
+                ))}
         </div>
 
         {!thinking && results.length > visible && (
@@ -203,7 +204,9 @@ function Discover() {
         {!thinking && results.length === 0 && (
           <div className="mt-6 space-y-5">
             <div className="rounded-2xl border border-dashed bg-card p-8 text-center">
-              <p className="font-display text-lg font-semibold">No exact matches with these filters</p>
+              <p className="font-display text-lg font-semibold">
+                No exact matches with these filters
+              </p>
               <p className="mt-1 text-sm text-muted-foreground">
                 Here are the closest options across the UAE and online instead.
               </p>

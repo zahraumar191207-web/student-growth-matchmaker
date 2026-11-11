@@ -15,7 +15,10 @@ const profileSchema = z.object({
 
 /** Strip control characters and collapse whitespace before text reaches the model. */
 function clean(text: string) {
-  return text.replace(/[\u0000-\u0008\u000B-\u001F\u007F]/g, "").replace(/[ \t]{2,}/g, " ").trim();
+  return text
+    .replace(/[\u0000-\u0008\u000B-\u001F\u007F]/g, "")
+    .replace(/[ \t]{2,}/g, " ")
+    .trim();
 }
 
 const GUARDRAILS =
@@ -77,9 +80,13 @@ export const getMatchInsights = createServerFn({ method: "POST" })
       },
     });
 
-    if (!res.ok) return { summary: "", picks: [] as { id: string; reason: string }[], error: res.error };
+    if (!res.ok)
+      return { summary: "", picks: [] as { id: string; reason: string }[], error: res.error };
     try {
-      const parsed = JSON.parse(res.text) as { summary: string; picks: { id: string; reason: string }[] };
+      const parsed = JSON.parse(res.text) as {
+        summary: string;
+        picks: { id: string; reason: string }[];
+      };
       return { summary: parsed.summary, picks: parsed.picks, error: null };
     } catch {
       return { summary: "", picks: [], error: "Couldn't read the advisor's answer." };

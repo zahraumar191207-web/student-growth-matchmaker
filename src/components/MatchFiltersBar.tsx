@@ -10,7 +10,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { DEFAULT_FILTERS, type MatchFilters, type SortKey, type UrgencyFilter } from "@/lib/matching";
+import {
+  DEFAULT_FILTERS,
+  type MatchFilters,
+  type SortKey,
+  type UrgencyFilter,
+} from "@/lib/matching";
 import { CATEGORY_META, type Category, type LocationTag } from "@/lib/opportunities";
 import { cn } from "@/lib/utils";
 
@@ -24,7 +29,14 @@ const ACTIVE_TRIGGER = "border-primary bg-primary-soft/60 font-semibold text-pri
 export function sanitizeQuery(q: string) {
   return q.replace(/[^\p{L}\p{N}\s&+.'-]/gu, "").slice(0, 60);
 }
-const LOCATIONS: (LocationTag | "all")[] = ["all", "Online", "Abu Dhabi", "Dubai", "Sharjah", "Global"];
+const LOCATIONS: (LocationTag | "all")[] = [
+  "all",
+  "Online",
+  "Abu Dhabi",
+  "Dubai",
+  "Sharjah",
+  "Global",
+];
 
 const URGENCY_LABEL: Record<UrgencyFilter, string> = {
   any: "Any deadline",
@@ -123,7 +135,9 @@ export function MatchFiltersBar({
             className={cn("w-full lg:w-44", filters.location !== "all" && ACTIVE_TRIGGER)}
             aria-label="Location"
           >
-            <SelectValue>{filters.location === "all" ? "All locations" : filters.location}</SelectValue>
+            <SelectValue>
+              {filters.location === "all" ? "All locations" : filters.location}
+            </SelectValue>
           </SelectTrigger>
           <SelectContent>
             {LOCATIONS.map((l) => (
