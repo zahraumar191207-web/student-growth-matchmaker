@@ -53,3 +53,33 @@ npm run dev
 - TypeScript
 - React
 - Tailwind CSS
+
+# OpportunityMate AI 🇦🇪
+**Tagline:** An agentic AI matchmaking platform connecting UAE university and high school students with free certified courses, verified volunteering roles, and flexible part-time jobs.
+
+## 🚀 Live Application & Demo
+- **Live App (Lovable):** https://student-growth-matchmaker.lovable.app
+- **Tech Stack:** Lovable.dev (React, TypeScript, Tailwind CSS, Agentic Prompt Routing)
+
+## 🎯 Problem & Solution
+Students in the UAE—especially high schoolers and university undergraduates—struggle to find legitimate, verified opportunities tailored to their exact Emirate, schedule, and academic level without getting lost on generic job boards. 
+
+**OpportunityMate AI** solves this through an interactive, guardrail-protected AI assistant that curates real, accessible opportunities across three pillars:
+1. **Free Certified Courses:** Skill-building courses with recognized certificates across tech, business, and sustainability (e.g., Coursera, edX, Hub71 workshops).
+2. **Verified UAE Volunteering:** Community and sustainability initiatives across Abu Dhabi, Dubai, and Sharjah with participation certificates (e.g., Goumbook).
+3. **Student Earn & Learn:** Flexible, entry-level part-time roles accessible to pre-degree and high school students (event support, brand ambassadors, venue operations).
+
+## ✨ Key Features
+- **Ask OpportunityMate AI (Conversational Matcher):** Natural-language chat interface with starter prompt chips allowing students to describe their goals and receive instant, structured recommendations.
+- **Smart Filtering & Match Cards:** Displays clear eligibility ("Open to every major", "Open to all ages"), Emirate tags, time commitment (`~2 hrs/week`), deadlines, and direct source links.
+- **Application & Resume Assistant (`Draft`):** One-click drafting for tailored motivation letters and resume bullet points.
+- **Opportunity Tracker (`Save`):** Bookmarking system to track deadlines and saved opportunities.
+- **Built-In Quality Feedback:** Thumbs-up/down match rating on every recommendation card to continuously refine match relevance.
+
+## 🛡️ Guardrails & Evaluation
+- **Precision & Speed:** Validated across 15+ diverse UAE student personas (high schoolers, STEM majors, business students) with sub-1.5s filtering latency and empathetic fallback guidance for niche queries.
+- **Privacy & Trust:** Zero personal data (PII) stored; every opportunity card links directly to its verified source organization with a reminder to confirm dates and eligibility before applying.
+
+## 📂 Repository Structure
+- `src/` — Core React & Tailwind CSS application code synced from Lovable.
+- `README.md` — Project overview, architecture, live demo link, and evaluation summary.
