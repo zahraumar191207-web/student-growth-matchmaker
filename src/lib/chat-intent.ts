@@ -1,7 +1,7 @@
 // "Ask OpportunityMate" — deterministic intent parsing and search for the chat assistant.
 // Pure functions shared by the browser (instant cards) and the server (AI reply context),
 // so both always agree on what was understood and which listings are shown.
-import type { MatchResult } from "./matching";
+import { DEFAULT_FILTERS, type MatchFilters, type MatchResult } from "./matching";
 import {
   CATEGORY_META,
   type Category,
@@ -599,4 +599,17 @@ export function composeReply(s: ChatSearch): string {
   const notes = s.notes.join(" ");
   const pick = top ? ` A strong place to start is **${top}**.` : "";
   return `${lead} ${notes}${pick} Tap Save on anything you like to track its deadline.`.replace(/\s+/g, " ").trim();
+}
+
+/** Turn a chat question into the main page's filters ("Apply to all results"). */
+export function filtersFromSearch(s: ChatSearch): MatchFilters {
+  const i = s.intent;
+  const city = i.locations.find((l) => l !== "Online");
+  const location = city ?? (i.locations.includes("Online") ? "Online" : "all");
+  return {
+    ...DEFAULT_FILTERS,
+    category: i.categories.length === 1 ? i.categories[0]! : "all",
+    location,
+    query: s.relaxed.includes("topic") ? "" : (i.keywords[0] ?? ""),
+  };
 }

@@ -38,3 +38,4 @@ use the editor.
 - Radix `SelectValue` gets explicit children so the selected label renders during SSR.
 - Client libraries are pre-bundled via `vite.optimizeDeps.include` in `vite.config.ts`; late dependency discovery re-optimizes mid-session and loads two React copies (null hook dispatcher crash). Add new client packages there.
 - Thumbs up/down feedback is stored only on-device (`feedbackStore`); AI logs record label, latency and sizes only, never prompts, outputs or names.
+- Ask OpportunityMate chat search is deterministic in `src/lib/chat-intent.ts` (shared by browser cards and the server reply prompt, covered by `src/test/chat-intent.test.ts`); the AI only writes the friendly reply, with `composeReply` as the no-AI fallback.

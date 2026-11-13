@@ -30,7 +30,7 @@ import {
   type ChatSearch,
 } from "@/lib/chat-intent";
 import type { MatchResult } from "@/lib/matching";
-import { OPPORTUNITIES } from "@/lib/opportunities";
+import { OPPORTUNITIES, type Category } from "@/lib/opportunities";
 import { cn } from "@/lib/utils";
 
 import { OpportunityCard } from "./OpportunityCard";
@@ -299,7 +299,7 @@ function AssistantMessage({
           loading="lazy"
           className="mt-0.5 size-8 shrink-0 rounded-xl bg-primary-soft p-0.5"
         />
-        <MessageContent className="min-w-0 flex-1 gap-3 text-[15px] leading-relaxed">
+        <MessageContent className="w-full min-w-0 flex-1 gap-3 text-[15px] leading-relaxed">
           {turn.searching ? (
             <Shimmer className="text-sm font-medium">Searching UAE opportunities...</Shimmer>
           ) : (
@@ -329,7 +329,7 @@ function AssistantMessage({
               )}
 
               {picks.length > 0 && (
-                <ul className="grid gap-1.5" aria-label="Matching opportunities">
+                <ul className="grid grid-cols-1 gap-1.5" aria-label="Matching opportunities">
                   {picks.slice(0, 3).map((m) => (
                     <MiniPick key={m.opportunity.id} match={m} onClick={() => onShow(m.opportunity.id)} />
                   ))}
@@ -355,6 +355,14 @@ function AssistantMessage({
   );
 }
 
+/** Full class names so Tailwind generates them (no string interpolation). */
+const CATEGORY_TONE: Record<Category, string> = {
+  course: "bg-cat-course-soft text-cat-course",
+  volunteer: "bg-cat-volunteer-soft text-cat-volunteer",
+  internship: "bg-cat-internship-soft text-cat-internship",
+  job: "bg-cat-job-soft text-cat-job",
+};
+
 function MiniPick({ match, onClick }: { match: MatchResult; onClick: () => void }) {
   const o = match.opportunity;
   const Icon = CATEGORY_ICON[o.category];
@@ -368,7 +376,7 @@ function MiniPick({ match, onClick }: { match: MatchResult; onClick: () => void 
         <span
           className={cn(
             "grid size-8 shrink-0 place-items-center rounded-lg",
-            `bg-cat-${o.category}-soft text-cat-${o.category}`,
+            CATEGORY_TONE[o.category],
           )}
         >
           <Icon className="size-4" aria-hidden />

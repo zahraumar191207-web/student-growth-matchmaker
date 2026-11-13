@@ -5,12 +5,14 @@ import { BadgeCheck, ChevronDown, Globe2, Sparkles, Wallet } from "lucide-react"
 import { useMemo, useRef, useState } from "react";
 
 import { AgentPanel } from "@/components/AgentPanel";
+import { AskOpportunityMate } from "@/components/AskOpportunityMate";
 import { MatchFiltersBar } from "@/components/MatchFiltersBar";
 import { OpportunityCard, OpportunityCardSkeleton } from "@/components/OpportunityCard";
 import { ProfileBar } from "@/components/ProfileBar";
 import { Button } from "@/components/ui/button";
 import heroImg from "@/assets/hero-students.jpg";
 import { getMatchInsights } from "@/lib/ai.functions";
+import { filtersFromSearch, type ChatSearch } from "@/lib/chat-intent";
 import {
   DEFAULT_FILTERS,
   filterAndRank,
@@ -93,6 +95,13 @@ function Discover() {
     return m;
   }, [insights.data]);
 
+  const applyChat = (s: ChatSearch) => {
+    changeFilters(filtersFromSearch(s));
+    requestAnimationFrame(() =>
+      resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }),
+    );
+  };
+
   const runMatch = (p: StudentProfile) => {
     profileStore.set({ ...p, hasMatched: true });
     setFilters(DEFAULT_FILTERS);
@@ -154,6 +163,14 @@ function Discover() {
       <div className="relative mx-auto -mt-2 max-w-7xl px-4 sm:px-6">
         <ProfileBar profile={profile} busy={thinking} onSubmit={runMatch} />
       </div>
+
+      <section
+        id="ask"
+        aria-label="Ask OpportunityMate AI"
+        className="mx-auto mt-10 max-w-7xl scroll-mt-20 px-4 sm:px-6"
+      >
+        <AskOpportunityMate onShowInResults={applyChat} />
+      </section>
 
       <section ref={resultsRef} className="mx-auto mt-12 max-w-7xl scroll-mt-20 px-4 sm:px-6">
         <AgentPanel
